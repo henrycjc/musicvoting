@@ -27,7 +27,11 @@
       "Bash(aws cloudformation describe-change-set-hooks:*)",
       "Bash(aws cloudformation list-stack-instance-resource-drifts:*)",
       "Bash(aws cloudformation describe-stack-resource-drifts:*)",
-      "Bash(aws cloudformation get-template:*)"
+      "Bash(aws cloudformation get-template:*)",
+      "Bash(aws:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
