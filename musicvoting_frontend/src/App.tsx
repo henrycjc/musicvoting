@@ -118,17 +118,19 @@ function App() {
             >
               My Ballot
             </Tab>
-            <Tab
-              className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors ${
-                  selected
-                    ? 'bg-green-600 text-white shadow'
-                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
-                }`
-              }
-            >
-              Results
-            </Tab>
+            {username?.toLowerCase() === 'hen' && (
+              <Tab
+                className={({ selected }) =>
+                  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors ${
+                    selected
+                      ? 'bg-green-600 text-white shadow'
+                      : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                  }`
+                }
+              >
+                Results
+              </Tab>
+            )}
           </TabList>
 
           <TabPanels>
@@ -151,9 +153,11 @@ function App() {
               )}
             </TabPanel>
 
-            <TabPanel>
-              <ResultsViewer ballots={ballots} />
-            </TabPanel>
+            {username?.toLowerCase() === 'hen' && (
+              <TabPanel>
+                <ResultsViewer ballots={ballots} />
+              </TabPanel>
+            )}
           </TabPanels>
         </TabGroup>
       </main>
