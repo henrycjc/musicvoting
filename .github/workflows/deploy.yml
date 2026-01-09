@@ -1,0 +1,129 @@
+name: Deploy Music Voting App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-2
+  SAM_STACK_NAME: musicvoting
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup SAM
+        uses: aws-actions/setup-sam@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: musicvoting_frontend/package-lock.json
+
+      - name: SAM Build
+        run: sam build
+
+      - name: SAM Deploy
+        run: |
+          # Build parameter overrides
+          PARAMS="SpotifyClientId=${{ secrets.SPOTIFY_CLIENT_ID }} SpotifyClientSecret=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+
+          # Add custom domain if configured
+          if [ -n "${{ secrets.DOMAIN_NAME }}" ]; then
+            PARAMS="$PARAMS DomainName=${{ secrets.DOMAIN_NAME }} CertificateArn=${{ secrets.CERTIFICATE_ARN }}"
+          fi
+
+          sam deploy \
+            --stack-name ${{ env.SAM_STACK_NAME }} \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --capabilities CAPABILITY_IAM \
+            --parameter-overrides $PARAMS
+
+      - name: Get Stack Outputs
+        id: stack-outputs
+        run: |
+          # Get all stack outputs
+          OUTPUTS=$(aws cloudformation describe-stacks \
+            --stack-name ${{ env.SAM_STACK_NAME }} \
+            --query 'Stacks[0].Outputs' \
+            --output json)
+
+          # Extract values
+          SPOTIFY_URL=$(echo $OUTPUTS | jq -r '.[] | select(.OutputKey=="SpotifyFunctionUrl") | .OutputValue')
+          BALLOT_URL=$(echo $OUTPUTS | jq -r '.[] | select(.OutputKey=="BallotFunctionUrl") | .OutputValue')
+          BUCKET_NAME=$(echo $OUTPUTS | jq -r '.[] | select(.OutputKey=="FrontendBucketName") | .OutputValue')
+          CLOUDFRONT_ID=$(echo $OUTPUTS | jq -r '.[] | select(.OutputKey=="CloudFrontDistributionId") | .OutputValue')
+          CLOUDFRONT_URL=$(echo $OUTPUTS | jq -r '.[] | select(.OutputKey=="CloudFrontUrl") | .OutputValue')
+
+          # Set outputs for subsequent steps
+          echo "spotify_url=$SPOTIFY_URL" >> $GITHUB_OUTPUT
+          echo "ballot_url=$BALLOT_URL" >> $GITHUB_OUTPUT
+          echo "bucket_name=$BUCKET_NAME" >> $GITHUB_OUTPUT
+          echo "cloudfront_id=$CLOUDFRONT_ID" >> $GITHUB_OUTPUT
+          echo "cloudfront_url=$CLOUDFRONT_URL" >> $GITHUB_OUTPUT
+
+          # Log for debugging
+          echo "Spotify URL: $SPOTIFY_URL"
+          echo "Ballot URL: $BALLOT_URL"
+          echo "CloudFront URL: $CLOUDFRONT_URL"
+
+      - name: Install Frontend Dependencies
+        working-directory: musicvoting_frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: musicvoting_frontend
+        env:
+          VITE_SPOTIFY_API_URL: ${{ steps.stack-outputs.outputs.spotify_url }}
+          VITE_BALLOT_API_URL: ${{ steps.stack-outputs.outputs.ballot_url }}
+        run: npm run build
+
+      - name: Deploy Frontend to S3
+        run: |
+          aws s3 sync musicvoting_frontend/dist/ s3://${{ steps.stack-outputs.outputs.bucket_name }} \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html"
+
+          # Upload index.html with no-cache
+          aws s3 cp musicvoting_frontend/dist/index.html s3://${{ steps.stack-outputs.outputs.bucket_name }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.stack-outputs.outputs.cloudfront_id }} \
+            --paths "/*"
+
+      - name: Output Deployment URL
+        run: |
+          echo "::notice::Deployment complete!"
+          echo "::notice::Frontend URL: ${{ steps.stack-outputs.outputs.cloudfront_url }}"
+          if [ -n "${{ secrets.DOMAIN_NAME }}" ]; then
+            echo "::notice::Custom Domain: https://${{ secrets.DOMAIN_NAME }}"
+          fi
+          echo "::notice::Spotify API: ${{ steps.stack-outputs.outputs.spotify_url }}"
+          echo "::notice::Ballot API: ${{ steps.stack-outputs.outputs.ballot_url }}"

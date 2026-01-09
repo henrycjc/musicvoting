@@ -1,0 +1,21 @@
+# SAM CLI Configuration for Music Voting App
+# This file provides default values for sam deploy
+
+version = 0.1
+
+[default.global.parameters]
+stack_name = "musicvoting"
+region = "ap-southeast-2"
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false
+resolve_s3 = true
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"

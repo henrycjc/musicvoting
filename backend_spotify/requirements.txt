@@ -1,0 +1,2 @@
+# No external dependencies - uses only stdlib
+# boto3 is provided by Lambda runtime
