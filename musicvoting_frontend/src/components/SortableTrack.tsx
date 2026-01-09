@@ -55,20 +55,20 @@ export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 rounded-lg border bg-gray-800 p-3 ${
+      className={`flex items-center gap-3 rounded-xl border bg-slate-800/60 p-3 transition-all ${
         isDragging
-          ? 'border-green-500 shadow-lg shadow-green-500/20 z-50'
-          : 'border-gray-700'
-      } ${!inRange ? 'border-yellow-600/50' : ''}`}
+          ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10 z-50'
+          : 'border-slate-700/50'
+      } ${!inRange ? 'border-amber-500/30' : ''}`}
     >
       <div
         {...attributes}
         {...listeners}
-        className="flex flex-col h-12 w-12 shrink-0 cursor-grab items-center justify-center rounded bg-gray-700 active:cursor-grabbing"
+        className="flex flex-col h-12 w-12 shrink-0 cursor-grab items-center justify-center rounded-lg bg-slate-700/60 active:cursor-grabbing"
       >
-        <span className="text-lg font-bold text-white">{entry.rank}</span>
+        <span className="text-lg font-bold text-slate-100">{entry.rank}</span>
         {algorithm && (
-          <span className="text-[10px] text-green-400">{getPointValue(entry.rank, algorithm)}</span>
+          <span className="text-[10px] text-emerald-400">{getPointValue(entry.rank, algorithm)}</span>
         )}
       </div>
 
@@ -76,19 +76,19 @@ export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps
         <img
           src={track.album.images[2].url}
           alt=""
-          className="h-12 w-12 shrink-0 rounded"
+          className="h-12 w-12 shrink-0 rounded-lg"
         />
       )}
 
       <div className="flex-1 min-w-0">
-        <p className="truncate font-medium text-white">{track.name}</p>
-        <p className="truncate text-sm text-gray-400">
+        <p className="truncate font-medium text-slate-100">{track.name}</p>
+        <p className="truncate text-sm text-slate-400">
           {track.artists.map((a) => a.name).join(', ')}
         </p>
       </div>
 
       {!inRange && (
-        <span className="shrink-0 rounded bg-yellow-900/50 px-2 py-1 text-xs text-yellow-400">
+        <span className="shrink-0 rounded-lg bg-amber-900/30 px-2 py-1 text-xs text-amber-400">
           Outside {CONFIG.VOTE_YEAR}
         </span>
       )}
@@ -96,7 +96,7 @@ export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps
       <button
         type="button"
         onClick={() => onRemove(entry.trackId)}
-        className="shrink-0 rounded p-2 text-gray-400 hover:bg-gray-700 hover:text-red-400"
+        className="shrink-0 rounded-lg p-2 text-slate-400 hover:bg-slate-700/60 hover:text-rose-400 transition-colors"
         aria-label="Remove track"
       >
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

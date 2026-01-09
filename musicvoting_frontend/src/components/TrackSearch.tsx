@@ -70,14 +70,14 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
       <Combobox value={null} onChange={handleSelect}>
         <div className="relative">
           <ComboboxInput
-            className="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-white placeholder-gray-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="w-full rounded-xl border border-slate-600/50 bg-slate-800/60 px-4 py-3 text-slate-100 placeholder-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all"
             placeholder="Search for a song..."
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <svg className="h-5 w-5 animate-spin text-gray-400" viewBox="0 0 24 24">
+              <svg className="h-5 w-5 animate-spin text-slate-400" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -98,13 +98,13 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
         </div>
 
         {searchError && (
-          <div className="absolute z-10 mt-1 w-full rounded-lg border border-red-500 bg-red-900/50 p-3">
-            <p className="text-sm text-red-300">{searchError}</p>
+          <div className="absolute z-10 mt-1 w-full rounded-xl border border-rose-500/50 bg-rose-900/30 p-3">
+            <p className="text-sm text-rose-300">{searchError}</p>
           </div>
         )}
 
         {tracks.length > 0 && !searchError && (
-          <ComboboxOptions className="absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-lg border border-gray-600 bg-gray-800 shadow-lg">
+          <ComboboxOptions className="absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-xl border border-slate-600/50 bg-slate-800 shadow-xl">
             {tracks.map((track) => {
               const inRange = isTrackInDateRange(track);
               return (
@@ -112,8 +112,8 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
                   key={track.id}
                   value={track}
                   className={({ active }) =>
-                    `cursor-pointer px-4 py-3 ${
-                      active ? 'bg-gray-700' : ''
+                    `cursor-pointer px-4 py-3 transition-colors ${
+                      active ? 'bg-slate-700/60' : ''
                     } ${!inRange ? 'opacity-60' : ''}`
                   }
                 >
@@ -122,20 +122,20 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
                       <img
                         src={track.album.images[2].url}
                         alt=""
-                        className="h-12 w-12 rounded"
+                        className="h-12 w-12 rounded-lg"
                       />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-white font-medium">{track.name}</p>
-                      <p className="truncate text-sm text-gray-400">
+                      <p className="truncate text-slate-100 font-medium">{track.name}</p>
+                      <p className="truncate text-sm text-slate-400">
                         {track.artists.map((a) => a.name).join(', ')}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500">
                         {track.album.name} ({track.album.release_date.slice(0, 4)})
                       </p>
                     </div>
                     {!inRange && (
-                      <span className="shrink-0 rounded bg-yellow-900/50 px-2 py-1 text-xs text-yellow-400">
+                      <span className="shrink-0 rounded-lg bg-amber-900/30 px-2 py-1 text-xs text-amber-400">
                         Outside {CONFIG.VOTE_YEAR}
                       </span>
                     )}

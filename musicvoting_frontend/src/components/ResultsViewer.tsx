@@ -87,35 +87,35 @@ export function ResultsViewer({ ballots }: ResultsViewerProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-4">
-          <p className="text-sm text-gray-400">Total Voters</p>
-          <p className="text-2xl font-bold text-white">{voterStats.totalVoters}</p>
+        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-4">
+          <p className="text-sm text-slate-400">Total Voters</p>
+          <p className="text-2xl font-bold text-slate-100">{voterStats.totalVoters}</p>
         </div>
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-4">
-          <p className="text-sm text-gray-400">Unique Tracks</p>
-          <p className="text-2xl font-bold text-white">{voterStats.uniqueTracks}</p>
+        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-4">
+          <p className="text-sm text-slate-400">Unique Tracks</p>
+          <p className="text-2xl font-bold text-slate-100">{voterStats.uniqueTracks}</p>
         </div>
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-4">
-          <p className="text-sm text-gray-400">Total Votes</p>
-          <p className="text-2xl font-bold text-white">{ballots.length * CONFIG.MAX_SONGS}</p>
+        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-4">
+          <p className="text-sm text-slate-400">Total Votes</p>
+          <p className="text-2xl font-bold text-slate-100">{ballots.length * CONFIG.MAX_SONGS}</p>
         </div>
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-4">
-          <p className="text-sm text-gray-400">Algorithm</p>
-          <p className="text-2xl font-bold text-green-400">{ALGORITHMS.find((a) => a.id === selectedAlgorithm)?.name}</p>
+        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-4">
+          <p className="text-sm text-slate-400">Algorithm</p>
+          <p className="text-2xl font-bold text-emerald-400">{ALGORITHMS.find((a) => a.id === selectedAlgorithm)?.name}</p>
         </div>
       </div>
 
       <TabGroup>
-        <TabList className="flex space-x-1 rounded-lg bg-gray-800 p-1">
+        <TabList className="flex space-x-1 rounded-xl bg-slate-800/50 p-1">
           {ALGORITHMS.map((algo) => (
             <Tab
               key={algo.id}
               onClick={() => setSelectedAlgorithm(algo.id)}
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors ${
+                `w-full rounded-xl py-2.5 text-sm font-medium leading-5 transition-all ${
                   selected
-                    ? 'bg-green-600 text-white shadow'
-                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100'
                 }`
               }
             >
@@ -126,36 +126,36 @@ export function ResultsViewer({ ballots }: ResultsViewerProps) {
         <TabPanels className="mt-4">
           {ALGORITHMS.map((algo) => (
             <TabPanel key={algo.id}>
-              <p className="mb-4 text-sm text-gray-400">{algo.description}</p>
+              <p className="mb-4 text-sm text-slate-400">{algo.description}</p>
             </TabPanel>
           ))}
         </TabPanels>
       </TabGroup>
 
       {rankings.length === 0 ? (
-        <div className="rounded-lg border-2 border-dashed border-gray-700 p-8 text-center">
-          <p className="text-gray-400">No votes submitted yet.</p>
+        <div className="rounded-xl border-2 border-dashed border-slate-700/50 p-8 text-center">
+          <p className="text-slate-400">No votes submitted yet.</p>
         </div>
       ) : (
         <div className="space-y-2">
           {rankings.slice(0, 100).map((result, index) => (
             <div
               key={result.track.id}
-              className={`flex items-center gap-4 rounded-lg border p-4 ${
+              className={`flex items-center gap-4 rounded-xl border p-4 transition-all ${
                 index < 3
-                  ? 'border-yellow-500/50 bg-yellow-900/20'
-                  : 'border-gray-700 bg-gray-800'
+                  ? 'border-amber-500/30 bg-amber-900/10'
+                  : 'border-slate-700/50 bg-slate-800/50'
               }`}
             >
               <div
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg font-bold ${
                   index === 0
-                    ? 'bg-yellow-500 text-black'
+                    ? 'bg-amber-400 text-slate-900'
                     : index === 1
-                    ? 'bg-gray-300 text-black'
+                    ? 'bg-slate-300 text-slate-900'
                     : index === 2
-                    ? 'bg-orange-600 text-white'
-                    : 'bg-gray-700 text-white'
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-slate-700/60 text-slate-100'
                 }`}
               >
                 {index + 1}
@@ -165,27 +165,27 @@ export function ResultsViewer({ ballots }: ResultsViewerProps) {
                 <img
                   src={result.track.album.images[2].url}
                   alt=""
-                  className="h-12 w-12 shrink-0 rounded"
+                  className="h-12 w-12 shrink-0 rounded-lg"
                 />
               )}
 
               <div className="flex-1 min-w-0">
-                <p className="truncate font-medium text-white">{result.track.name}</p>
-                <p className="truncate text-sm text-gray-400">
+                <p className="truncate font-medium text-slate-100">{result.track.name}</p>
+                <p className="truncate text-sm text-slate-400">
                   {result.track.artists.map((a) => a.name).join(', ')}
                 </p>
               </div>
 
               <div className="text-right shrink-0">
-                <p className="text-lg font-bold text-green-400">{result.score}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-lg font-bold text-emerald-400">{result.score}</p>
+                <p className="text-xs text-slate-500">
                   {result.votes} vote{result.votes !== 1 ? 's' : ''}
                 </p>
               </div>
 
               <div className="hidden md:block shrink-0 w-32">
-                <p className="text-xs text-gray-500">Positions</p>
-                <p className="text-sm text-gray-400">
+                <p className="text-xs text-slate-500">Positions</p>
+                <p className="text-sm text-slate-400">
                   {result.positions.sort((a, b) => a - b).slice(0, 5).join(', ')}
                   {result.positions.length > 5 ? '...' : ''}
                 </p>
@@ -195,28 +195,28 @@ export function ResultsViewer({ ballots }: ResultsViewerProps) {
         </div>
       )}
 
-      <div className="border-t border-gray-700 pt-6">
-        <h3 className="mb-4 text-lg font-semibold text-white">Individual Ballots</h3>
+      <div className="border-t border-slate-700/50 pt-6">
+        <h3 className="mb-4 text-lg font-semibold text-slate-100">Individual Ballots</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {ballots.map((ballot) => (
-            <div key={ballot.username} className="rounded-lg border border-gray-700 bg-gray-800 p-4">
+            <div key={ballot.username} className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-4">
               <div className="mb-3 flex items-center justify-between">
-                <h4 className="font-medium text-white">{ballot.username}</h4>
+                <h4 className="font-medium text-slate-100">{ballot.username}</h4>
                 {ballot.submittedAt && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-slate-500">
                     {new Date(ballot.submittedAt).toLocaleDateString()}
                   </span>
                 )}
               </div>
               <ol className="space-y-1 text-sm">
                 {ballot.entries.slice(0, 5).map((entry) => (
-                  <li key={entry.trackId} className="flex items-center gap-2 text-gray-300">
-                    <span className="w-5 text-gray-500">{entry.rank}.</span>
+                  <li key={entry.trackId} className="flex items-center gap-2 text-slate-300">
+                    <span className="w-5 text-slate-500">{entry.rank}.</span>
                     <span className="truncate">{entry.track.name}</span>
                   </li>
                 ))}
                 {ballot.entries.length > 5 && (
-                  <li className="text-gray-500">...and {ballot.entries.length - 5} more</li>
+                  <li className="text-slate-500">...and {ballot.entries.length - 5} more</li>
                 )}
               </ol>
             </div>

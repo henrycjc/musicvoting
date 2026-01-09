@@ -74,26 +74,26 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <LoginForm onLogin={login} isLoading={isLoading} error={error} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <header className="border-b border-gray-800 bg-gray-900/95 backdrop-blur sticky top-0 z-40">
+    <div className="min-h-screen bg-slate-900">
+      <header className="border-b border-slate-800/50 bg-slate-900/95 backdrop-blur sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-white">
-                Music Voting {CONFIG.VOTE_YEAR}
+              <h1 className="text-xl font-bold text-slate-100">
+                Warmest 70 of {CONFIG.VOTE_YEAR}
               </h1>
-              <p className="text-sm text-gray-400">Logged in as {displayName || username}</p>
+              <p className="text-sm text-slate-400">Logged in as {displayName || username}</p>
             </div>
             <button
               onClick={logout}
-              className="rounded-lg border border-gray-600 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+              className="rounded-xl border border-slate-600/50 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800/50 transition-all"
             >
               Logout
             </button>
@@ -106,13 +106,13 @@ function App() {
           <ErrorBanner message={apiError} onDismiss={() => setApiError(null)} />
         )}
         <TabGroup selectedIndex={selectedTab} onChange={setSelectedTab}>
-          <TabList className="flex space-x-1 rounded-lg bg-gray-800 p-1 mb-6">
+          <TabList className="flex space-x-1 rounded-xl bg-slate-800/50 p-1 mb-6">
             <Tab
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors ${
+                `w-full rounded-xl py-2.5 text-sm font-medium leading-5 transition-all ${
                   selected
-                    ? 'bg-green-600 text-white shadow'
-                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100'
                 }`
               }
             >
@@ -121,10 +121,10 @@ function App() {
             {username?.toLowerCase() === 'hen' && (
               <Tab
                 className={({ selected }) =>
-                  `w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-colors ${
+                  `w-full rounded-xl py-2.5 text-sm font-medium leading-5 transition-all ${
                     selected
-                      ? 'bg-green-600 text-white shadow'
-                      : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                      : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100'
                   }`
                 }
               >
@@ -137,7 +137,7 @@ function App() {
             <TabPanel>
               {isLoadingBallot ? (
                 <div className="flex items-center justify-center py-12">
-                  <svg className="h-8 w-8 animate-spin text-green-500" viewBox="0 0 24 24">
+                  <svg className="h-8 w-8 animate-spin text-emerald-400" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
