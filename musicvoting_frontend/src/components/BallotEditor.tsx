@@ -151,6 +151,14 @@ export function BallotEditor({
 
   return (
     <div className="space-y-6">
+      {!hasExistingBallot && (
+        <div className="rounded-lg bg-gray-800 border border-gray-700 p-4">
+          <p className="text-gray-200">
+            Choose your top {CONFIG.MAX_SONGS} songs from {CONFIG.VOTE_YEAR} and rank them. Then submit your ballot.
+          </p>
+        </div>
+      )}
+
       {showRestoredBanner && (
         <div className="rounded-lg bg-blue-900/50 border border-blue-500 p-4">
           <div className="flex items-start gap-3">
