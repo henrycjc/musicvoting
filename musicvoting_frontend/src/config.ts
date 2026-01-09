@@ -42,7 +42,7 @@ export const USERS: { username: string; displayName: string; pin: string; emoji:
   { username: 'natasha', displayName: 'Natasha', pin: 'shakira', emoji: '💃' },
   { username: 'nikola', displayName: 'Nikola', pin: 'tesla', emoji: '🔌' },
   { username: 'peter', displayName: 'Peter', pin: 'genesis', emoji: '🐺' },
-  { username: 'sarah', displayName: 'Sarah', pin: 'flume', emoji: '🎪' },
+  { username: 'sarah', displayName: 'Sarah', pin: 'flume', emoji: '🥁' },
   { username: 'sean', displayName: 'Sean', pin: 'arctic', emoji: '🐧' },
 ];
 
