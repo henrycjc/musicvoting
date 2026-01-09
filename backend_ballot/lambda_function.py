@@ -30,12 +30,12 @@ ballots_table = dynamodb.Table(BALLOTS_TABLE)
 
 
 def cors_headers() -> dict[str, str]:
-    """Return CORS headers for the response."""
-    return {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS',
-    }
+    """Return CORS headers for the response.
+
+    Note: When using Lambda Function URLs with CORS enabled,
+    AWS handles CORS headers automatically. We only need Content-Type here.
+    """
+    return {}
 
 
 def decimal_to_num(obj: Any) -> Any:

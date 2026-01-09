@@ -88,12 +88,12 @@ def format_track(track: dict[str, Any]) -> dict[str, Any]:
 
 
 def cors_headers() -> dict[str, str]:
-    """Return CORS headers for the response."""
-    return {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-        'Access-Control-Allow-Methods': 'GET,OPTIONS',
-    }
+    """Return CORS headers for the response.
+
+    Note: When using Lambda Function URLs with CORS enabled,
+    AWS handles CORS headers automatically. We return empty here.
+    """
+    return {}
 
 
 def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
