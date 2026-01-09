@@ -23,7 +23,11 @@
       "Bash(cmd /c:*)",
       "Bash(aws cloudformation list-stack-sets:*)",
       "Bash(aws cloudformation describe-type-registration:*)",
-      "Bash(aws cloudformation create-stack:*)"
+      "Bash(aws cloudformation create-stack:*)",
+      "Bash(aws cloudformation describe-change-set-hooks:*)",
+      "Bash(aws cloudformation list-stack-instance-resource-drifts:*)",
+      "Bash(aws cloudformation describe-stack-resource-drifts:*)",
+      "Bash(aws cloudformation get-template:*)"
     ]
   }
 }
