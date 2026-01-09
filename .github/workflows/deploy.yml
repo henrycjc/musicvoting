@@ -56,20 +56,34 @@ jobs:
 
       - name: Deploy via CloudFormation
         run: |
-          # Build parameter overrides (deploy uses Key=Value format)
-          PARAMS="SpotifyClientId=${{ secrets.SPOTIFY_CLIENT_ID }} SpotifyClientSecret=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+          # Build parameter list for create-stack/update-stack
+          PARAMS="ParameterKey=SpotifyClientId,ParameterValue=${{ secrets.SPOTIFY_CLIENT_ID }} ParameterKey=SpotifyClientSecret,ParameterValue=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
 
           # Add custom domain if configured
           if [ -n "${{ secrets.DOMAIN_NAME }}" ]; then
-            PARAMS="$PARAMS DomainName=${{ secrets.DOMAIN_NAME }} CertificateArn=${{ secrets.CERTIFICATE_ARN }}"
+            PARAMS="$PARAMS ParameterKey=DomainName,ParameterValue=${{ secrets.DOMAIN_NAME }} ParameterKey=CertificateArn,ParameterValue=${{ secrets.CERTIFICATE_ARN }}"
+          else
+            PARAMS="$PARAMS ParameterKey=DomainName,ParameterValue= ParameterKey=CertificateArn,ParameterValue="
           fi
 
-          aws cloudformation deploy \
-            --template-file packaged.yaml \
-            --stack-name ${{ env.SAM_STACK_NAME }} \
-            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-            --parameter-overrides $PARAMS \
-            --no-fail-on-empty-changeset
+          # Check if stack exists
+          if aws cloudformation describe-stacks --stack-name ${{ env.SAM_STACK_NAME }} 2>/dev/null; then
+            echo "Stack exists, updating..."
+            aws cloudformation update-stack \
+              --template-body file://packaged.yaml \
+              --stack-name ${{ env.SAM_STACK_NAME }} \
+              --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+              --parameters $PARAMS || true
+            aws cloudformation wait stack-update-complete --stack-name ${{ env.SAM_STACK_NAME }} || true
+          else
+            echo "Creating new stack..."
+            aws cloudformation create-stack \
+              --template-body file://packaged.yaml \
+              --stack-name ${{ env.SAM_STACK_NAME }} \
+              --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+              --parameters $PARAMS
+            aws cloudformation wait stack-create-complete --stack-name ${{ env.SAM_STACK_NAME }}
+          fi
 
       - name: Get Stack Outputs
         id: stack-outputs
