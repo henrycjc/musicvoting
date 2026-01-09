@@ -29,6 +29,8 @@ jobs:
 
       - name: Setup SAM
         uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -45,22 +47,29 @@ jobs:
       - name: SAM Build
         run: sam build
 
-      - name: SAM Deploy
+      - name: SAM Package
         run: |
-          # Build parameter overrides
-          PARAMS="SpotifyClientId=${{ secrets.SPOTIFY_CLIENT_ID }} SpotifyClientSecret=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+          sam package \
+            --output-template-file packaged.yaml \
+            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-8t18pthy4jcl \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Deploy via CloudFormation
+        run: |
+          # Build parameter overrides for CloudFormation format
+          PARAMS="ParameterKey=SpotifyClientId,ParameterValue=${{ secrets.SPOTIFY_CLIENT_ID }} ParameterKey=SpotifyClientSecret,ParameterValue=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
 
           # Add custom domain if configured
           if [ -n "${{ secrets.DOMAIN_NAME }}" ]; then
-            PARAMS="$PARAMS DomainName=${{ secrets.DOMAIN_NAME }} CertificateArn=${{ secrets.CERTIFICATE_ARN }}"
+            PARAMS="$PARAMS ParameterKey=DomainName,ParameterValue=${{ secrets.DOMAIN_NAME }} ParameterKey=CertificateArn,ParameterValue=${{ secrets.CERTIFICATE_ARN }}"
           fi
 
-          sam deploy \
+          aws cloudformation deploy \
+            --template-file packaged.yaml \
             --stack-name ${{ env.SAM_STACK_NAME }} \
-            --no-confirm-changeset \
-            --no-fail-on-empty-changeset \
-            --capabilities CAPABILITY_IAM \
-            --parameter-overrides $PARAMS
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --parameter-overrides $PARAMS \
+            --no-fail-on-empty-changeset
 
       - name: Get Stack Outputs
         id: stack-outputs
