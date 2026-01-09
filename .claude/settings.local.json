@@ -11,7 +11,12 @@
       "Bash(aws cloudformation validate-template:*)",
       "Bash(aws cloudformation list-types:*)",
       "Bash(aws cloudformation describe-type:*)",
-      "Bash(aws cloudformation wait:*)"
+      "Bash(aws cloudformation wait:*)",
+      "Bash(aws cloudformation list-change-sets:*)",
+      "Bash(aws cloudformation describe-change-set:*)",
+      "Bash(aws acm describe-certificate:*)",
+      "Bash(nslookup:*)",
+      "Bash(dig:*)"
     ]
   }
 }
