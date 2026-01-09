@@ -1,6 +1,6 @@
 # Music Voting App
 
-A Hottest 100-style voting application for private use. Users select and rank their top 20 songs of the year, with Spotify as the source of truth for track data.
+A Hottest 100-style voting application for private use. Users select and rank their top 20 songs of the year, with Spotify as the source of truth for track data. Deployed on AWS.
 
 ## Features
 
