@@ -56,12 +56,12 @@ jobs:
 
       - name: Deploy via CloudFormation
         run: |
-          # Build parameter overrides for CloudFormation format
-          PARAMS="ParameterKey=SpotifyClientId,ParameterValue=${{ secrets.SPOTIFY_CLIENT_ID }} ParameterKey=SpotifyClientSecret,ParameterValue=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+          # Build parameter overrides (deploy uses Key=Value format)
+          PARAMS="SpotifyClientId=${{ secrets.SPOTIFY_CLIENT_ID }} SpotifyClientSecret=${{ secrets.SPOTIFY_CLIENT_SECRET }}"
 
           # Add custom domain if configured
           if [ -n "${{ secrets.DOMAIN_NAME }}" ]; then
-            PARAMS="$PARAMS ParameterKey=DomainName,ParameterValue=${{ secrets.DOMAIN_NAME }} ParameterKey=CertificateArn,ParameterValue=${{ secrets.CERTIFICATE_ARN }}"
+            PARAMS="$PARAMS DomainName=${{ secrets.DOMAIN_NAME }} CertificateArn=${{ secrets.CERTIFICATE_ARN }}"
           fi
 
           aws cloudformation deploy \
