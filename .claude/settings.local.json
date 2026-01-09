@@ -16,7 +16,9 @@
       "Bash(aws cloudformation describe-change-set:*)",
       "Bash(aws acm describe-certificate:*)",
       "Bash(nslookup:*)",
-      "Bash(dig:*)"
+      "Bash(dig:*)",
+      "Bash(aws dynamodb describe-table:*)",
+      "Bash(aws lambda get-function:*)"
     ]
   }
 }

@@ -21,11 +21,11 @@ Parameters:
   DomainName:
     Type: String
     Description: Custom domain name (e.g., vote.example.com). Leave empty to use CloudFront domain.
-    Default: 'warmest70.site'
+    Default: ''
   CertificateArn:
     Type: String
     Description: ACM Certificate ARN for custom domain (must be in us-east-1). Required if DomainName is set.
-    Default: 'arn:aws:acm:us-east-1:079262750487:certificate/ed4b0e60-3d1d-400a-91c9-7e1a9fd47e91'
+    Default: ''
 
 Conditions:
   HasCustomDomain: !Not [!Equals [!Ref DomainName, '']]
@@ -157,10 +157,7 @@ Resources:
           CachedMethods:
             - GET
             - HEAD
-          ForwardedValues:
-            QueryString: false
-            Cookies:
-              Forward: none
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           Compress: true
         # SPA routing - return index.html for 404s
         CustomErrorResponses:
