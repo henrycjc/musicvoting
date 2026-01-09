@@ -63,13 +63,14 @@ function App() {
   );
 
   const handleDelete = useCallback(async () => {
-    if (!username) return;
+    if (!username || !existingBallot) return;
     const result = await deleteBallot(username);
     if (!result.success) {
       throw new Error(result.error);
     }
-    setExistingBallot(null);
-  }, [username]);
+    // Keep the ballot data but mark as rescinded so user can edit and resubmit
+    setExistingBallot({ ...existingBallot, isRescinded: true });
+  }, [username, existingBallot]);
 
   if (!isAuthenticated) {
     return (
@@ -145,7 +146,7 @@ function App() {
                   initialEntries={existingBallot?.entries}
                   onSave={handleSave}
                   onDelete={handleDelete}
-                  hasExistingBallot={!!existingBallot}
+                  hasExistingBallot={!!existingBallot && !existingBallot.isRescinded}
                 />
               )}
             </TabPanel>

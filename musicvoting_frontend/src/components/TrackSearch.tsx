@@ -146,17 +146,6 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
           </ComboboxOptions>
         )}
       </Combobox>
-
-      <div className="mt-2 text-sm text-gray-500">
-        <button
-          type="button"
-          className="text-green-500 hover:text-green-400 underline cursor-not-allowed opacity-50"
-          disabled
-        >
-          Sign in with Spotify to import your top songs
-        </button>
-        <span className="ml-2 text-xs">(Coming soon)</span>
-      </div>
     </div>
   );
 }

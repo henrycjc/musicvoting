@@ -4,6 +4,7 @@ Handles ballot storage in DynamoDB. No authentication - honor system for friends
 """
 import json
 import os
+from decimal import Decimal
 from typing import Any
 import boto3
 
@@ -37,12 +38,23 @@ def cors_headers() -> dict[str, str]:
     }
 
 
+def decimal_to_num(obj: Any) -> Any:
+    """Convert Decimal objects to int/float for JSON serialization."""
+    if isinstance(obj, Decimal):
+        return int(obj) if obj % 1 == 0 else float(obj)
+    if isinstance(obj, dict):
+        return {k: decimal_to_num(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [decimal_to_num(i) for i in obj]
+    return obj
+
+
 def response(status_code: int, body: dict[str, Any] | list) -> dict[str, Any]:
     """Create a Lambda response with CORS headers."""
     return {
         'statusCode': status_code,
         'headers': {**cors_headers(), 'Content-Type': 'application/json'},
-        'body': json.dumps(body),
+        'body': json.dumps(decimal_to_num(body)),
     }
 
 
@@ -71,14 +83,18 @@ def handle_save_ballot(body: dict[str, Any]) -> dict[str, Any]:
     if not username:
         return response(400, {'success': False, 'error': 'Username required'})
 
-    if not entries or len(entries) != 20:
-        return response(400, {'success': False, 'error': 'Ballot must contain exactly 20 entries'})
+    if not entries or len(entries) == 0:
+        return response(400, {'success': False, 'error': 'Ballot must contain at least 1 entry'})
+
+    if len(entries) > 20:
+        return response(400, {'success': False, 'error': 'Ballot cannot exceed 20 entries'})
 
     try:
         ballots_table.put_item(Item={
             'username': username,
             'entries': entries,
             'submittedAt': submitted_at,
+            'isRescinded': False,  # Clear rescinded flag on save
         })
         return response(200, {'success': True})
 
@@ -88,17 +104,25 @@ def handle_save_ballot(body: dict[str, Any]) -> dict[str, Any]:
 
 
 def handle_delete_ballot(username: str) -> dict[str, Any]:
-    """Delete a user's ballot (rescind vote)."""
+    """Soft-delete a user's ballot by setting isRescinded flag."""
     if not username:
         return response(400, {'success': False, 'error': 'Username required'})
 
     try:
-        ballots_table.delete_item(Key={'username': username})
+        # Soft delete - mark as rescinded instead of deleting
+        ballots_table.update_item(
+            Key={'username': username},
+            UpdateExpression='SET isRescinded = :val, rescindedAt = :time',
+            ExpressionAttributeValues={
+                ':val': True,
+                ':time': __import__('datetime').datetime.now().isoformat(),
+            },
+        )
         return response(200, {'success': True})
 
     except Exception as e:
         print(f"Delete ballot error: {e}")
-        return response(500, {'success': False, 'error': 'Failed to delete ballot'})
+        return response(500, {'success': False, 'error': 'Failed to rescind ballot'})
 
 
 def handle_admin_get_ballots() -> dict[str, Any]:

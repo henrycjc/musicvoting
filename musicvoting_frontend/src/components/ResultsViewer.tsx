@@ -28,6 +28,9 @@ function calculateRankings(
         case 'logarithmic':
           score = Math.log2(CONFIG.MAX_SONGS + 2 - entry.rank);
           break;
+        case 'exponential':
+          score = Math.pow(2, CONFIG.MAX_SONGS - entry.rank);
+          break;
         case 'bayesian':
           score = (CONFIG.MAX_SONGS - entry.rank + 1) / CONFIG.MAX_SONGS;
           break;
@@ -59,10 +62,11 @@ function calculateRankings(
 }
 
 const ALGORITHMS: { id: RankingAlgorithm; name: string; description: string }[] = [
-  { id: 'borda', name: 'Borda Count', description: '1st=20pts, 2nd=19pts, ..., 20th=1pt' },
-  { id: 'harmonic', name: 'Harmonic', description: '1st=1pt, 2nd=0.5pt, 3rd=0.33pt, ...' },
-  { id: 'logarithmic', name: 'Logarithmic', description: 'log2(21-rank) points' },
-  { id: 'bayesian', name: 'Bayesian', description: 'Normalized 0-1 scale' },
+  { id: 'borda', name: 'Borda Count', description: 'Linear scoring (1st=20pts, 20th=1pt). Fair and balanced - every position matters equally in terms of point difference.' },
+  { id: 'harmonic', name: 'Harmonic', description: 'Strong top bias (1st=1pt, 2nd=0.5pt, 10th=0.1pt). Your #1 pick is worth as much as picks #2-20 combined.' },
+  { id: 'logarithmic', name: 'Logarithmic', description: 'Moderate top bias using log2 scale. Top 5 picks carry most weight, but lower ranks still contribute meaningfully.' },
+  { id: 'exponential', name: 'Exponential', description: 'Extreme top bias (1st=524k pts, 2nd=262k pts). Your #1 pick completely dominates - great for finding consensus favorites.' },
+  { id: 'bayesian', name: 'Bayesian', description: 'Normalized 0-1 scale (1st=1.0, 20th=0.05). Same as Borda but scaled for easier interpretation.' },
 ];
 
 export function ResultsViewer({ ballots }: ResultsViewerProps) {

@@ -23,6 +23,8 @@ export interface Ballot {
   username: string;
   entries: BallotEntry[];
   submittedAt?: string;
+  isRescinded?: boolean;
+  rescindedAt?: string;
 }
 
 export interface User {
@@ -44,4 +46,4 @@ export interface RankingResult {
   positions: number[];
 }
 
-export type RankingAlgorithm = 'borda' | 'harmonic' | 'logarithmic' | 'bayesian';
+export type RankingAlgorithm = 'borda' | 'harmonic' | 'logarithmic' | 'exponential' | 'bayesian';

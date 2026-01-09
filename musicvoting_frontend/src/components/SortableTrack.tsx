@@ -17,6 +17,8 @@ function getPointValue(rank: number, algorithm: RankingAlgorithm): string {
       return `${(1 / rank).toFixed(2)}pts`;
     case 'logarithmic':
       return `${Math.log2(CONFIG.MAX_SONGS + 2 - rank).toFixed(2)}pts`;
+    case 'exponential':
+      return `${Math.pow(2, CONFIG.MAX_SONGS - rank).toFixed(0)}pts`;
     case 'bayesian':
       return `${((CONFIG.MAX_SONGS - rank + 1) / CONFIG.MAX_SONGS).toFixed(2)}pts`;
     default:

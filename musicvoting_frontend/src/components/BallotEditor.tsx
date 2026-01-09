@@ -22,10 +22,11 @@ import { CONFIG } from '../config';
 import type { BallotEntry, SpotifyTrack, RankingAlgorithm } from '../types';
 
 const ALGORITHMS: { id: RankingAlgorithm; name: string; description: string }[] = [
-  { id: 'borda', name: 'Borda Count', description: '1st=20pts, 20th=1pt' },
-  { id: 'harmonic', name: 'Harmonic', description: '1st=1pt, 2nd=0.5pt' },
-  { id: 'logarithmic', name: 'Logarithmic', description: 'log2 scale' },
-  { id: 'bayesian', name: 'Bayesian', description: '0-1 normalized' },
+  { id: 'borda', name: 'Borda Count', description: 'Linear: equal gaps between ranks' },
+  { id: 'harmonic', name: 'Harmonic', description: 'Strong top bias: #1 matters most' },
+  { id: 'logarithmic', name: 'Logarithmic', description: 'Moderate top bias: top 5 matter more' },
+  { id: 'exponential', name: 'Exponential', description: 'Extreme top bias: #1 dominates' },
+  { id: 'bayesian', name: 'Bayesian', description: 'Normalized 0-1 scale' },
 ];
 
 interface BallotEditorProps {
@@ -113,8 +114,8 @@ export function BallotEditor({
   }, []);
 
   const handleSubmit = async () => {
-    if (entries.length !== CONFIG.MAX_SONGS) {
-      alert(`Please select exactly ${CONFIG.MAX_SONGS} songs`);
+    if (entries.length === 0) {
+      alert('Please add at least 1 song');
       return;
     }
     setIsSaving(true);
@@ -270,11 +271,11 @@ export function BallotEditor({
         <p className="text-sm text-gray-400">
           {entries.length === CONFIG.MAX_SONGS
             ? 'Ready to submit!'
-            : `Add ${CONFIG.MAX_SONGS - entries.length} more song${CONFIG.MAX_SONGS - entries.length !== 1 ? 's' : ''}`}
+            : `${entries.length}/${CONFIG.MAX_SONGS} songs selected`}
         </p>
         <button
           onClick={handleSubmit}
-          disabled={entries.length !== CONFIG.MAX_SONGS || isSaving || hasExistingBallot}
+          disabled={entries.length === 0 || isSaving || hasExistingBallot}
           className="rounded-lg bg-green-600 px-6 py-3 font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving ? 'Submitting...' : 'Submit Ballot'}
