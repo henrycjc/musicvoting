@@ -18,7 +18,12 @@
       "Bash(nslookup:*)",
       "Bash(dig:*)",
       "Bash(aws dynamodb describe-table:*)",
-      "Bash(aws lambda get-function:*)"
+      "Bash(aws lambda get-function:*)",
+      "Bash(sam build:*)",
+      "Bash(cmd /c:*)",
+      "Bash(aws cloudformation list-stack-sets:*)",
+      "Bash(aws cloudformation describe-type-registration:*)",
+      "Bash(aws cloudformation create-stack:*)"
     ]
   }
 }
