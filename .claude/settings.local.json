@@ -3,7 +3,9 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(npm run build:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(aws iam attach-role-policy:*)",
+      "Bash(aws cloudformation delete-stack:*)"
     ]
   }
 }
