@@ -33,6 +33,10 @@ function isTrackInDateRange(releaseDate: string): boolean {
   return date >= startDate && date <= endDate;
 }
 
+function getTrackYear(releaseDate: string): number {
+  return parseInt(releaseDate.slice(0, 4), 10);
+}
+
 export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps) {
   const {
     attributes,
@@ -50,6 +54,7 @@ export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps
 
   const { track } = entry;
   const inRange = isTrackInDateRange(track.album.release_date);
+  const trackYear = getTrackYear(track.album.release_date);
 
   return (
     <div
@@ -87,9 +92,13 @@ export function SortableTrack({ entry, onRemove, algorithm }: SortableTrackProps
         </p>
       </div>
 
-      {!inRange && (
+      {inRange ? (
+        <span className="shrink-0 rounded-lg bg-slate-700/50 px-2 py-1 text-xs text-slate-300">
+          {trackYear}
+        </span>
+      ) : (
         <span className="shrink-0 rounded-lg bg-amber-900/30 px-2 py-1 text-xs text-amber-400">
-          Outside {CONFIG.VOTE_YEAR}
+          Outside decade
         </span>
       )}
 

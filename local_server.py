@@ -40,21 +40,10 @@ def check_dynamodb_connection():
         client = dynamodb.meta.client
         tables = client.list_tables()['TableNames']
 
-        missing = []
-        for table in ['musicvoting_users', 'musicvoting_ballots']:
-            if table not in tables:
-                missing.append(table)
-
-        if missing:
-            print(f"[ERROR] Missing tables: {', '.join(missing)}")
+        if 'musicvoting_ballots' not in tables:
+            print("[ERROR] Missing table: musicvoting_ballots")
             print("        Run: python scripts/setup_local_dynamo.py")
             return False
-
-        # Check if users exist
-        users_table = dynamodb.Table('musicvoting_users')
-        result = users_table.scan(Limit=1)
-        if not result.get('Items'):
-            print("[WARN] No users in database. Run: python scripts/setup_local_dynamo.py")
 
         print("[OK] DynamoDB Local connected")
         return True
@@ -90,6 +79,7 @@ class SpotifyHandler(http.server.BaseHTTPRequestHandler):
         result = spotify_lambda.lambda_handler(event, None)
 
         self.send_response(result['statusCode'])
+        self.send_header('Access-Control-Allow-Origin', '*')
         for key, value in result.get('headers', {}).items():
             self.send_header(key, value)
         self.end_headers()
@@ -128,6 +118,7 @@ class BallotHandler(http.server.BaseHTTPRequestHandler):
         print(f"[Ballot] Response: {result['statusCode']} - {result.get('body', '')[:200]}")
 
         self.send_response(result['statusCode'])
+        self.send_header('Access-Control-Allow-Origin', '*')
         for key, value in result.get('headers', {}).items():
             self.send_header(key, value)
         self.end_headers()

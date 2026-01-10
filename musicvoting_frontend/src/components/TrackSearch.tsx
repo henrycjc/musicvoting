@@ -16,6 +16,10 @@ function isTrackInDateRange(track: SpotifyTrack): boolean {
   return releaseDate >= startDate && releaseDate <= endDate;
 }
 
+function getTrackYear(track: SpotifyTrack): number {
+  return parseInt(track.album.release_date.slice(0, 4), 10);
+}
+
 export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
   const [query, setQuery] = useState('');
   const [tracks, setTracks] = useState<SpotifyTrack[]>([]);
@@ -107,6 +111,7 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
           <ComboboxOptions className="absolute z-10 mt-1 max-h-80 w-full overflow-auto rounded-xl border border-slate-600/50 bg-slate-800 shadow-xl">
             {tracks.map((track) => {
               const inRange = isTrackInDateRange(track);
+              const trackYear = getTrackYear(track);
               return (
                 <ComboboxOption
                   key={track.id}
@@ -131,12 +136,16 @@ export function TrackSearch({ onSelect, excludeIds = [] }: TrackSearchProps) {
                         {track.artists.map((a) => a.name).join(', ')}
                       </p>
                       <p className="text-xs text-slate-500">
-                        {track.album.name} ({track.album.release_date.slice(0, 4)})
+                        {track.album.name} ({trackYear})
                       </p>
                     </div>
-                    {!inRange && (
+                    {inRange ? (
+                      <span className="shrink-0 rounded-lg bg-slate-700/50 px-2 py-1 text-xs text-slate-300">
+                        {trackYear}
+                      </span>
+                    ) : (
                       <span className="shrink-0 rounded-lg bg-amber-900/30 px-2 py-1 text-xs text-amber-400">
-                        Outside {CONFIG.VOTE_YEAR}
+                        Outside decade
                       </span>
                     )}
                   </div>

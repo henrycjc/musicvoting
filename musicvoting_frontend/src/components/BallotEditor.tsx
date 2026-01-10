@@ -18,7 +18,7 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headless
 import { TrackSearch } from './TrackSearch';
 import { SortableTrack } from './SortableTrack';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { CONFIG } from '../config';
+import { CONFIG, getVotePeriodLabel } from '../config';
 import type { BallotEntry, SpotifyTrack, RankingAlgorithm } from '../types';
 
 const ALGORITHMS: { id: RankingAlgorithm; name: string; description: string }[] = [
@@ -154,7 +154,7 @@ export function BallotEditor({
       {!hasExistingBallot && (
         <div className="rounded-xl bg-slate-800/50 border border-slate-700/50 p-4">
           <p className="text-slate-300">
-            Choose your top {CONFIG.MAX_SONGS} songs from {CONFIG.VOTE_YEAR} and rank them. Then submit your ballot.
+            Choose your top {CONFIG.MAX_SONGS} songs from {getVotePeriodLabel()} and rank them. Then submit your ballot.
           </p>
         </div>
       )}

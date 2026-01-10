@@ -1,13 +1,22 @@
 export const CONFIG = {
   SPOTIFY_API_URL: import.meta.env.VITE_SPOTIFY_API_URL || 'http://localhost:3001',
   BALLOT_API_URL: import.meta.env.VITE_BALLOT_API_URL || 'http://localhost:3002',
-  VOTE_YEAR: 2025,
-  VOTE_START_DATE: '2025-01-01',
+  VOTE_START_YEAR: 2015,
+  VOTE_END_YEAR: 2025,
+  VOTE_START_DATE: '2015-01-01',
   VOTE_END_DATE: '2025-12-31',
   MAX_SONGS: 20,
   LOCAL_STORAGE_KEY: 'musicvoting_ballot_draft',
   LOCAL_STORAGE_RESTORED_KEY: 'musicvoting_restored_from_local',
 };
+
+// Helper to get the display label for the voting period
+export function getVotePeriodLabel(): string {
+  if (CONFIG.VOTE_START_YEAR === CONFIG.VOTE_END_YEAR) {
+    return `${CONFIG.VOTE_START_YEAR}`;
+  }
+  return `${CONFIG.VOTE_START_YEAR}-${CONFIG.VOTE_END_YEAR}`;
+}
 
 // Hardcoded users - login is case-insensitive for both username and PIN
 // Each user has a unique emoji avatar

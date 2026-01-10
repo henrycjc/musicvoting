@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { USERS } from '../config';
+import { USERS, getVotePeriodLabel } from '../config';
 
 interface LoginFormProps {
   onLogin: (username: string, pin: string) => Promise<boolean>;
@@ -41,7 +41,7 @@ export function LoginForm({ onLogin, isLoading, error }: LoginFormProps) {
           Warmest 70
         </h1>
         <p className="text-xl md:text-2xl font-bold text-amber-400 tracking-widest">
-          2025
+          {getVotePeriodLabel()}
         </p>
         <p className="text-slate-400 mt-2 text-lg">Choose Your Player</p>
       </div>

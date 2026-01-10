@@ -7,7 +7,7 @@ import { ErrorBanner } from './components/ErrorBanner';
 import { useAuth } from './hooks/useAuth';
 import { getBallot, saveBallot, deleteBallot, getAllBallots } from './api';
 import type { Ballot, BallotEntry } from './types';
-import { CONFIG } from './config';
+import { getVotePeriodLabel } from './config';
 
 function App() {
   const { isAuthenticated, username, displayName, isLoading, error, login, logout } = useAuth();
@@ -87,7 +87,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-100">
-                Warmest 70 of {CONFIG.VOTE_YEAR}
+                Warmest 70 of {getVotePeriodLabel()}
               </h1>
               <p className="text-sm text-slate-400">Logged in as {displayName || username}</p>
             </div>
