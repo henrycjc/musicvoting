@@ -37,9 +37,12 @@ export function LoginForm({ onLogin, isLoading, error }: LoginFormProps) {
     <div className="w-full max-w-6xl mx-auto px-4">
       {/* Title */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 mb-2 tracking-tight">
-          Warmest 70
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <img src="/image.png" alt="" className="h-12 w-12 md:h-16 md:w-16" />
+          <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 tracking-tight">
+            Warmest 70
+          </h1>
+        </div>
         <p className="text-xl md:text-2xl font-bold text-amber-400 tracking-widest">
           {getVotePeriodLabel()}
         </p>

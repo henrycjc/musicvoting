@@ -72,10 +72,19 @@ function App() {
     setExistingBallot({ ...existingBallot, isRescinded: true });
   }, [username, existingBallot]);
 
+  const footer = (
+    <footer className="py-6 text-center text-sm text-slate-500">
+      Send bugs and feature requests to Hen
+    </footer>
+  );
+
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <LoginForm onLogin={login} isLoading={isLoading} error={error} />
+      <div className="min-h-screen bg-slate-900 flex flex-col">
+        <div className="flex-1 flex items-center justify-center p-4">
+          <LoginForm onLogin={login} isLoading={isLoading} error={error} />
+        </div>
+        {footer}
       </div>
     );
   }
@@ -85,11 +94,14 @@ function App() {
       <header className="border-b border-slate-800/50 bg-slate-900/95 backdrop-blur sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-slate-100">
-                Warmest 70 of {getVotePeriodLabel()}
-              </h1>
-              <p className="text-sm text-slate-400">Logged in as {displayName || username}</p>
+            <div className="flex items-center gap-3">
+              <img src="/image.png" alt="" className="h-8 w-8" />
+              <div>
+                <h1 className="text-xl font-bold text-slate-100">
+                  Warmest 70 of {getVotePeriodLabel()}
+                </h1>
+                <p className="text-sm text-slate-400">Logged in as {displayName || username}</p>
+              </div>
             </div>
             <button
               onClick={logout}
@@ -161,6 +173,8 @@ function App() {
           </TabPanels>
         </TabGroup>
       </main>
+
+      {footer}
     </div>
   );
 }
